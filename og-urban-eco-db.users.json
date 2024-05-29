@@ -1,0 +1,72 @@
+[{
+  "_id": {
+    "$oid": "664d7ce4fd7eeb0cb28e08aa"
+  },
+  "name": "test",
+  "email": "test@gmail.com",
+  "password": "$2a$08$4TaD2JsoW5eCOpYplaXZn.KmsDL67nbjZ2C2v848aw3pLcqTyxfo2",
+  "is_verified": false,
+  "areas_of_interest": [],
+  "areas_of_study": [],
+  "createdAt": {
+    "$date": "2024-05-22T05:04:36.318Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-22T05:04:36.318Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "664d8007dd75b56624dd5580"
+  },
+  "name": "test2",
+  "email": "test2@gmail.com",
+  "password": "$2a$08$S/HTHPXLQeEb6Ao3ImZW9Oi2BdgIYblsj1gDc6vPij1TRpIMC7bK2",
+  "is_verified": false,
+  "areas_of_interest": [],
+  "areas_of_study": [],
+  "createdAt": {
+    "$date": "2024-05-22T05:17:59.903Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-22T05:17:59.903Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "664db47c087df68945668ddf"
+  },
+  "name": "test3",
+  "email": "test3@gmail.com",
+  "password": "$2a$08$d8epcR88ON4iTwe13BmhFeTVmc3MPbE0FTCrR9giSDtTafoJvunBC",
+  "is_verified": false,
+  "areas_of_interest": [],
+  "areas_of_study": [],
+  "createdAt": {
+    "$date": "2024-05-22T09:01:48.233Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-22T09:01:48.233Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "664dd334087df68945668de5"
+  },
+  "name": "momo",
+  "email": "momo@gmail.com",
+  "password": "$2a$08$WRFbDTTBX5j.I5Md8/t8Uey8dF4f8LaWtBslWXjCdjqakSsCm9JfK",
+  "is_verified": false,
+  "areas_of_interest": [],
+  "areas_of_study": [],
+  "createdAt": {
+    "$date": "2024-05-22T11:12:52.679Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-22T11:12:52.679Z"
+  },
+  "__v": 0
+}]
