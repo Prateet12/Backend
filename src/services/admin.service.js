@@ -4,26 +4,27 @@ const ApiError = require("../utils/ApiError");
 const { User, Admin, Role } = require("../models");
 const { roleService } = require("./role.service");
 
-// TODO(team): fill these functions
 const getRegistrationRequests = async (instituteName) => {
   const admin = await Admin.findOne({ institution: instituteName });
   console.log("getRegistrationRequests service " + " admin: ", admin);
 
   let requests = [];
 
-  const users = await User.find({ _id: { $in: admin.registration_requests } });
+  const users = await User.find({ _id: { $in: admin.registration_requests }, verified: false });
   users.forEach((user) => {
     console.log("user: ", user);
     requests.push({
       id: user._id,
       user: user.name,
       created_at: user.createdAt,
+      request_type: "User Registration"
     });
   });
   if (instituteName == null) {
     // ie. is super admin
     const admins = await Admin.find({
       _id: { $in: admin.admin_registration_requests },
+      verified: false,
     });
     admins.forEach((admin) => {
       console.log("admin: ", admin);
@@ -31,6 +32,7 @@ const getRegistrationRequests = async (instituteName) => {
         id: admin._id,
         user: admin.name,
         created_at: admin.createdAt,
+        request_type: "Admin Registration"
       });
     });
   }
