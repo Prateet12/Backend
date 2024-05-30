@@ -35,7 +35,7 @@ const register = catchAsync(async (req, res) => {
 
   console.log("Registered User is: ", registeredUser);
   
-  res.status(httpStatus.CREATED).send({ registeredUser, tokens });
+  res.status(httpStatus.CREATED).send({ registeredUser });
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
