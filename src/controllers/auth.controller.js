@@ -35,9 +35,6 @@ const register = catchAsync(async (req, res) => {
 
   console.log("Registered User is: ", registeredUser);
   
-  // TODO(aadijain): token logic implement
-  const tokens = await tokenService.generateAuthTokens(registeredUser);
-
   res.status(httpStatus.CREATED).send({ registeredUser, tokens });
 });
 
