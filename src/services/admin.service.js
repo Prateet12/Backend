@@ -1,8 +1,8 @@
 const httpStatus = require("http-status");
 const mongoose = require("mongoose");
 const ApiError = require("../utils/ApiError");
-const { User, Admin, Role } = require("../models");
-const { roleService } = require("./role.service");
+const { User, Admin, Role, File } = require("../models");
+const fileHandlerService = require("./fileHandler.service");
 
 const getRegistrationRequests = async (instituteName) => {
   const admin = await Admin.findOne({ institution: instituteName });
@@ -10,14 +10,17 @@ const getRegistrationRequests = async (instituteName) => {
 
   let requests = [];
 
-  const users = await User.find({ _id: { $in: admin.registration_requests }, verified: false });
+  const users = await User.find({
+    _id: { $in: admin.registration_requests },
+    verified: false,
+  });
   users.forEach((user) => {
     console.log("user: ", user);
     requests.push({
       id: user._id,
       user: user.name,
       created_at: user.createdAt,
-      request_type: "User Registration"
+      request_type: "User Registration",
     });
   });
   if (instituteName == null) {
@@ -32,7 +35,7 @@ const getRegistrationRequests = async (instituteName) => {
         id: admin._id,
         user: admin.name,
         created_at: admin.createdAt,
-        request_type: "Admin Registration"
+        request_type: "Admin Registration",
       });
     });
   }
@@ -40,8 +43,24 @@ const getRegistrationRequests = async (instituteName) => {
   return { requests };
 };
 
-const getUploadRequests = async (req, res) => {
-  // Your code here
+// These will just update the admin or specified institutional admin objects
+// requests
+const updateRegistrationRequests = async (userData) => {
+  const admin = !userData.institution_name
+    ? await Admin.getAdmin()
+    : Admin.getInstituteAdmin(userData.institution_name);
+  if (!admin) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Admin not found");
+  }
+  // Check if user_id is provided before pushing to registration_request
+  if (userData && userData._id) {
+    admin.registration_request.push(userData._id);
+    await admin.save();
+  } else {
+    // TODO(aadijain): just add validation instead at the route js level
+    // updateRegistrationRequests should be called with atleast user_id
+    throw new ApiError(httpStatus.BAD_REQUEST, "User ID is required");
+  }
 };
 
 const approveRegistration = async (userId, adminId) => {
@@ -92,15 +111,8 @@ const approveRegistration = async (userId, adminId) => {
 };
 
 const rejectRegistration = async (req, res) => {
-  // TODO(team): Discuss what to do in this case and also for rejecting files
-};
-
-const approveUpload = async (req, res) => {
-  // Your code here
-};
-
-const rejectUpload = async (req, res) => {
-  // Your code here
+  // TODO(team):email service to reject and send invitation
+  throw new ApiError(httpStatus.NOT_IMPLEMENTED, "Function not implemented");
 };
 
 const getAdminByEmail = async (email) => {
@@ -166,33 +178,99 @@ const createInstituteAdmin = async (adminData) => {
   }
 };
 
-// These will just update the admin or specified institutional admin objects
-// requests
-const updateRegistrationRequests = async (userData) => {
-  const admin = !userData.institution_name
-    ? await Admin.getAdmin()
-    : Admin.getInstituteAdmin(userData.institution_name);
+const getUploadRequests = async (instituteName) => {
+  // Your code here
+  const admin = instituteName
+    ? await Admin.getInstituteAdmin(instituteName)
+    : await Admin.getAdmin();
   if (!admin) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Admin not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Admin not found");
   }
-  // Check if user_id is provided before pushing to registration_request
-  if (userData && userData._id) {
-    admin.registration_request.push(userData._id);
-    await admin.save();
+
+  let query;
+  if (instituteName) {
+    query = {
+      _id: { $in: admin.file_requests },
+      $or: [{ institutionalAdminApproval: false }],
+    };
   } else {
-    // TODO(aadijain): just add validation instead at the route js level
-    // updateRegistrationRequests should be called with atleast user_id
-    throw new ApiError(httpStatus.BAD_REQUEST, "User ID is required");
+    query = {
+      _id: { $in: admin.file_requests },
+      adminApproval: false,
+    };
+  }
+
+  const file_requests = await File.find(query);
+  if (!file_requests) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No file requests found");
+  }
+  return file_requests;
+};
+
+const approveUpload = async (fileId, instituteName) => {
+  try {
+    console.log("approveUpload: ", fileId, instituteName);
+    const file = await fileHandlerService.getFileById(fileId);
+    console.log("File: ", file);
+    if (!file) {
+      throw new ApiError(httpStatus.NOT_FOUND, "File not found");
+    }
+    if (instituteName) {
+      file.institutionalAdminApproval = true;
+    } else {
+      file.adminApproval = true;
+    }
+
+    if (file.adminApproval && file.institutionalAdminApproval) {
+      file.status = "Approved";
+    }
+    const admin = instituteName
+      ? await Admin.getInstituteAdmin(instituteName)
+      : await Admin.getAdmin();
+    console.log("Admin: ", admin);
+    if (!admin) {
+      throw new ApiError(httpStatus.NOT_FOUND, "Admin not found");
+    }
+    admin.file_requests = admin.file_requests.filter(
+      (id) => String(id) !== fileId
+    );
+    await admin.save();
+    await file.save();
+    return;
+  } catch (error) {
+    console.error("Error: ", error);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
 };
 
-const updateUploadRequests = async (req, res) => {
-  const admin = !req.body.institution
-    ? await Admin.getAdmin()
-    : Admin.getInstituteAdmin(req.body.institution);
-  if (!admin) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Admin not found");
+const rejectUpload = async (fileId, instituteName) => {
+  // Your code here
+  if (!fileId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "File ID is required");
   }
+  const file = await File.findOne({ _id: fileId });
+  if (!file) {
+    throw new ApiError(httpStatus.NOT_FOUND, "File not found");
+  }
+  file.status = "Rejected";
+  const admin = instituteName
+    ? await Admin.getInstituteAdmin(instituteName)
+    : await Admin.getAdmin();
+  if (!admin) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Admin not found");
+  }
+  admin.file_requests = admin.file_requests.filter(
+    (id) => String(id) !== fileId
+  );
+  await admin.save();
+  await file.save();
+  return;
+};
+
+const getAllInstitutions = async () => {
+  const admins = await Admin.find({});
+  const institutions = admins.map((admin) => admin.institution);
+  return institutions;
 };
 
 module.exports = {
@@ -206,4 +284,5 @@ module.exports = {
   createInstituteAdmin,
   updateRegistrationRequests,
   getAdminByEmail,
+  getAllInstitutions,
 };

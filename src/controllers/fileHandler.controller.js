@@ -1,47 +1,76 @@
 const httpStatus = require("http-status");
-const pick = require("../utils/pick");
+// const pick = require("../utils/pick");
 const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
 
 const fileHandlerService = require("../services/fileHandler.service");
 
-// TODO(Sid): Implement the following functions using multer 
-// to simply upload, delete, download files.
-// 1. Upload locally -
-// to the computer eg. store everything to your downloads folder 
-// and save the path to the file in the database
-// 2. Download locally - 
-
-// When calling getFile, we should fetch from the path in the database
-// from the local downloads folder -- let us know if this is
-// unclear or easier to do in the frontend
-
 const uploadFile = catchAsync(async (req, res) => {
-
+  console.log("uploadFile");
+  if (!req.files || req.files.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "No file uploaded");
+  }
+  console.log("controller");
+  const fileData = await fileHandlerService.uploadFile(req);
+  res.status(httpStatus.CREATED).send(fileData);
 });
 
 const getAllFiles = catchAsync(async (req, res) => {
-
+  console.log("getAllFiles");
+  const files = await fileHandlerService.getAllFiles();
+  res.status(httpStatus.OK).send(files);
 });
 
 const getFileById = catchAsync(async (req, res) => {
-
+  const fileId = req.params.id;
+  const file = await fileHandlerService.getFileById(fileId);
+  if (!file) {
+    throw new ApiError(httpStatus.NOT_FOUND, "File not found");
+  }
+  res.status(httpStatus.OK).send(file);
 });
 
 const getUserFiles = catchAsync(async (req, res) => {
-
+  const userId = req.body.user_id;
+  console.log("userId", userId);
+  const files = await fileHandlerService.getUserFiles(userId);
+  if (!files || files.length === 0) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      "No files have been found for user. Either user does not exist or user has not uploaded any files."
+    );
+  }
+  res.status(httpStatus.OK).send(files);
 });
 
+const updateFile = catchAsync(async (req, res) => {
+  const file = await fileHandlerService.updateFile(req);
+  if (!file) {
+    throw new ApiError(httpStatus.NOT_FOUND, "File does not exist");
+  }
+  res.status(httpStatus.OK).send(file);
+});
 
+const deleteFile = catchAsync(async (req, res) => {
+  // first checking if file is there
+  const fileId = req.params.id;
+  await fileHandlerService.deleteFile(fileId);
+  res.status(httpStatus.OK).send("File has been deleted successfully.");
+});
 
-
-
-const deleteFile = catchAsync(async (req, res) => {});
+const getFileCount = catchAsync(async (req, res) => {
+  console.log("getFileCount controller");
+  const count = await fileHandlerService.countAllFiles();
+  console.log("count", count);
+  res.status(httpStatus.OK).send({ count });
+});
 
 module.exports = {
   uploadFile,
   deleteFile,
   getAllFiles,
   getFileById,
-  getUserFiles
+  getUserFiles,
+  updateFile,
+  getFileCount,
 };

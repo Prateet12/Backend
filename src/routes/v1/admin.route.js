@@ -6,6 +6,8 @@ const adminController = require('../../controllers/admin.controller');
 
 const router = express.Router();
 
+router.get('/allInstitutions', adminController.getAllInstitutions);
+
 router.post('/create', validate(adminValidation.createAdmin), adminController.createAdmin);
 router.post('/createInstituteAdmin', validate(adminValidation.createInstitutionAdmin),adminController.createInstituteAdmin);
 

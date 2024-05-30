@@ -1,9 +1,6 @@
-const mongoose = require("mongoose");
 const httpStatus = require("http-status");
-// const { User } = require('../models');
 const ApiError = require("../utils/ApiError");
 const { User, Role, Admin } = require("../models");
-const adminService = require("./admin.service");
 
 // const emailService = require('./email.service');
 // const randomPwdService = require('./random.service');

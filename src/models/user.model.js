@@ -95,6 +95,12 @@ const userSchema = mongoose.Schema(
       type: [String],
       default: [],
     },
+    // TODO(aadijain): double check this
+    status: {
+      type: String,
+      enum: ["Pending", "Approved", "Rejected"],
+      default: "Pending",
+    },
   },
   {
     timestamps: true,
