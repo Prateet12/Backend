@@ -19,7 +19,11 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   if (user) {
     if (!user.verified) {
       // send a response with no object specifying user has not been yet approved by admin
-      throw new ApiError(httpStatus.UNAUTHORIZED, "User not verified yet");
+      if (user.status.toLowerCase() === "pending") {
+        throw new ApiError(httpStatus.UNAUTHORIZED, "User not verified yet");
+      } else if (user.status.toLowerCase() === "rejected") {
+        throw new ApiError(httpStatus.UNAUTHORIZED, "User rejected by admin");
+      }
     }
     if (await user.isPasswordMatch(password)) {
       return user;

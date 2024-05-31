@@ -2,18 +2,12 @@ const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
 const { authService, userService, adminService } = require("../services");
 
-// TODO(team): fill these functions
-
-// Requires institutionName, otherwise uses Admin's institution
 const getRegistrationRequests = catchAsync(async (req, res) => {
-  // Your code here
-  console.log("getRegistrationRequests");
   const institutionName =
     req.body && req.body.institutionName ? req.body.institutionName : null;
   const registration_requests = await adminService.getRegistrationRequests(
     institutionName
   );
-  console.log("Registration requests: ", registration_requests);
   res.status(httpStatus.OK).send(registration_requests);
 });
 
@@ -29,6 +23,8 @@ const approveRegistration = catchAsync(async (req, res) => {
 
 const rejectRegistration = catchAsync(async (req, res) => {
   // TODO emails service
+  await adminService.rejectRegistration(req.body.user, req.body.admin);
+  res.status(httpStatus.OK).send("Rejected registration");
 });
 
 const approveUpload = catchAsync(async (req, res) => {

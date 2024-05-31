@@ -6,7 +6,6 @@ const fileHandlerService = require("./fileHandler.service");
 
 const getRegistrationRequests = async (instituteName) => {
   const admin = await Admin.findOne({ institution: instituteName });
-  console.log("getRegistrationRequests service " + " admin: ", admin);
 
   let requests = [];
 
@@ -21,6 +20,7 @@ const getRegistrationRequests = async (instituteName) => {
       user: user.name,
       created_at: user.createdAt,
       request_type: "User Registration",
+      userDetails: user,
     });
   });
   if (instituteName == null) {
@@ -36,6 +36,7 @@ const getRegistrationRequests = async (instituteName) => {
         user: admin.name,
         created_at: admin.createdAt,
         request_type: "Admin Registration",
+        userDetails: admin,
       });
     });
   }
@@ -80,12 +81,12 @@ const approveRegistration = async (userId, adminId) => {
     admin.registration_requests &&
     admin.registration_requests.map(String).includes(userId)
   ) {
-    console.log("user found in registration requests");
     admin.registration_requests = admin.registration_requests.filter(
       (id) => String(id) !== userId
     );
     const user = await User.findOne({ _id: userId });
     user.verified = true;
+    user.status = "Approved";
     await user.save();
     await admin.save();
     return;
@@ -94,7 +95,6 @@ const approveRegistration = async (userId, adminId) => {
     admin.admin_registration_requests &&
     admin.admin_registration_requests.map(String).includes(userId)
   ) {
-    console.log("admin found in registration requests");
     admin.admin_registration_requests =
       admin.admin_registration_requests.filter((id) => String(id) !== userId);
     const newAdmin = await Admin.findOne({ _id: userId });
@@ -110,9 +110,53 @@ const approveRegistration = async (userId, adminId) => {
   );
 };
 
-const rejectRegistration = async (req, res) => {
+const rejectRegistration = async (userId, adminId) => {
   // TODO(team):email service to reject and send invitation
-  throw new ApiError(httpStatus.NOT_IMPLEMENTED, "Function not implemented");
+  // For now just reject by removing the current user id from the registration requests
+  const admin = await Admin.findOne({ _id: adminId });
+  if (!admin) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Admin not found");
+  }
+  if (!admin.verified) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Admin not verified");
+  }
+
+  if (
+    admin.registration_requests &&
+    admin.registration_requests.map(String).includes(userId)
+  ) {
+    const user = await User.findOne({ _id: userId });
+    const instituteAdmin = await Admin.getInstituteAdmin(user.institution_name);
+    if (instituteAdmin) {
+      instituteAdmin.registration_requests = instituteAdmin.registration_requests.filter(
+        (id) => String(id) !== userId
+      );
+      await instituteAdmin.save();
+    }
+    user.verified = false;
+    admin.registration_requests = admin.registration_requests.filter(
+      (id) => String(id) !== userId
+    );
+    await user.save();
+    await admin.save();
+    return;
+  }
+
+  if (
+    admin.admin_registration_requests &&
+    admin.admin_registration_requests.map(String).includes(userId)
+  ) {
+    admin.admin_registration_requests = admin.admin_registration_requests.filter(
+      (id) => String(id) !== req
+    );
+    await admin.save();
+    return;
+  }
+
+  throw new ApiError(
+    httpStatus.NOT_FOUND,
+    "User not found in registration requests"
+  );
 };
 
 const getAdminByEmail = async (email) => {
