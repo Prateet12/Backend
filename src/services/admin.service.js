@@ -87,6 +87,7 @@ const approveRegistration = async (userId, adminId) => {
     const user = await User.findOne({ _id: userId });
     user.verified = true;
     user.status = "Approved";
+    user.joinDate = new Date();
     await user.save();
     await admin.save();
     return;

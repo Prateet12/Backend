@@ -20,8 +20,9 @@ const createInstitutionAdmin = {
 
 const approveRegistration = {
   body: Joi.object().keys({
-    user: Joi.string().custom(objectId),
-    admin: Joi.string().custom(objectId),
+    user: Joi.string().custom(objectId).required(),
+    admin: Joi.string().custom(objectId).required(),
+    instituteName: Joi.string().allow(null),
   }),
 };
 

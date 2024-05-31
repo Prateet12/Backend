@@ -101,6 +101,10 @@ const userSchema = mongoose.Schema(
       enum: ["Pending", "Approved", "Rejected"],
       default: "Pending",
     },
+    joinDate: {
+      type: Date,
+      default: null,
+    }
   },
   {
     timestamps: true,
