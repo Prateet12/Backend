@@ -262,8 +262,10 @@ const approveUpload = async (fileId, instituteName) => {
     }
     if (instituteName) {
       file.institutionalAdminApproval = true;
+      file.status = "Approved by Institute Admin";
     } else {
       file.adminApproval = true;
+      file.status = "Approved by Admin";
     }
 
     if (file.adminApproval && file.institutionalAdminApproval) {
@@ -314,7 +316,8 @@ const rejectUpload = async (fileId, instituteName) => {
 
 const getAllInstitutions = async () => {
   const admins = await Admin.find({});
-  const institutions = admins.map((admin) => admin.institution);
+  const institutions = admins.map((admin) => admin.institution).filter(Boolean);
+  console.log("institutions: ", institutions);
   return institutions;
 };
 

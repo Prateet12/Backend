@@ -85,7 +85,13 @@ const fileSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected"],
+      enum: [
+        "Pending",
+        "Approved by Admin",
+        "Approved by Institute Admin",
+        "Approved",
+        "Rejected",
+      ],
       default: "Pending",
     },
   },
