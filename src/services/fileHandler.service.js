@@ -188,7 +188,7 @@ const deleteFile = async (fileId) => {
 
 const getAllFiles = async () => {
   try {
-    const files = await File.find();
+    const files = await File.find({status: "Approved", fileType: { $ne: "Resume" }});
     if (!files || files.length === 0) {
       throw new ApiError(httpStatus.NOT_FOUND, "No files found.");
     }
