@@ -31,7 +31,7 @@ const getFileById = catchAsync(async (req, res) => {
 });
 
 const getUserFiles = catchAsync(async (req, res) => {
-  const userId = req.body.user_id;
+  const userId = req.params.id;
   console.log("userId", userId);
   const files = await fileHandlerService.getUserFiles(userId);
   if (!files || files.length === 0) {

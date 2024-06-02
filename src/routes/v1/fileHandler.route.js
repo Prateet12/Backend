@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/upload", upload.array("files", 2), fileController.uploadFile);
 router.delete("/delete/:id", fileController.deleteFile);
-router.post("/userFiles", fileController.getUserFiles);
+router.get("/userFiles/:id", fileController.getUserFiles);
 router.get("/fileCount", fileController.getFileCount);
 router.get("/all", fileController.getAllFiles);
 router.get("/:id", fileController.getFileById);
