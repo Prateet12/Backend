@@ -129,9 +129,10 @@ const rejectRegistration = async (userId, adminId) => {
     const user = await User.findOne({ _id: userId });
     const instituteAdmin = await Admin.getInstituteAdmin(user.institution_name);
     if (instituteAdmin) {
-      instituteAdmin.registration_requests = instituteAdmin.registration_requests.filter(
-        (id) => String(id) !== userId
-      );
+      instituteAdmin.registration_requests =
+        instituteAdmin.registration_requests.filter(
+          (id) => String(id) !== userId
+        );
       await instituteAdmin.save();
     }
     user.verified = false;
@@ -147,9 +148,8 @@ const rejectRegistration = async (userId, adminId) => {
     admin.admin_registration_requests &&
     admin.admin_registration_requests.map(String).includes(userId)
   ) {
-    admin.admin_registration_requests = admin.admin_registration_requests.filter(
-      (id) => String(id) !== req
-    );
+    admin.admin_registration_requests =
+      admin.admin_registration_requests.filter((id) => String(id) !== req);
     await admin.save();
     return;
   }
@@ -245,7 +245,7 @@ const getUploadRequests = async (instituteName) => {
     };
   }
 
-  const file_requests = await File.find(query);
+  const file_requests = await File.find(query).populate("fromUser");
   if (!file_requests) {
     throw new ApiError(httpStatus.NOT_FOUND, "No file requests found");
   }
@@ -290,25 +290,35 @@ const approveUpload = async (fileId, instituteName) => {
   }
 };
 
-const rejectUpload = async (fileId, instituteName) => {
+const rejectUpload = async (fileId) => {
   // Your code here
   if (!fileId) {
     throw new ApiError(httpStatus.BAD_REQUEST, "File ID is required");
   }
-  const file = await File.findOne({ _id: fileId });
+  const file = await File.findOne({ _id: fileId }).populate("fromUser");
   if (!file) {
     throw new ApiError(httpStatus.NOT_FOUND, "File not found");
   }
   file.status = "Rejected";
-  const admin = instituteName
-    ? await Admin.getInstituteAdmin(instituteName)
-    : await Admin.getAdmin();
+  let instName = file.fromUser.institute_name;
+
+  const instAdmin = await Admin.getInstituteAdmin(instName);
+  if (!instAdmin) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Admin not found");
+  }
+  instAdmin.file_requests = instAdmin.file_requests.filter(
+    (id) => String(id) !== fileId
+  );
+
+  const admin = await Admin.getAdmin();
   if (!admin) {
     throw new ApiError(httpStatus.NOT_FOUND, "Admin not found");
   }
   admin.file_requests = admin.file_requests.filter(
     (id) => String(id) !== fileId
   );
+
+  await instAdmin.save();
   await admin.save();
   await file.save();
   return;

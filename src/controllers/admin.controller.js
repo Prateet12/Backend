@@ -3,22 +3,26 @@ const catchAsync = require("../utils/catchAsync");
 const { authService, userService, adminService } = require("../services");
 
 const getRegistrationRequests = catchAsync(async (req, res) => {
-  const institutionName =
-    req.params && req.params.institutionName
-      ? req.params.institutionName
+  const instituteName =
+    req.params &&
+    req.params.instituteName &&
+    req.params.instituteName !== "null"
+      ? req.params.instituteName
       : null;
   const registration_requests = await adminService.getRegistrationRequests(
-    institutionName
+    instituteName
   );
   res.status(httpStatus.OK).send(registration_requests);
 });
 
 const getUploadRequests = catchAsync(async (req, res) => {
-  const institutionName =
-    req.params && req.params.institutionName
-      ? req.params.institutionName
+  const instituteName =
+    req.params &&
+    req.params.instituteName &&
+    req.params.instituteName !== "null"
+      ? req.params.instituteName
       : null;
-  const upload_requests = await adminService.getUploadRequests(institutionName);
+  const upload_requests = await adminService.getUploadRequests(instituteName);
   res.status(httpStatus.OK).send(upload_requests);
 });
 
@@ -43,7 +47,7 @@ const approveUpload = catchAsync(async (req, res) => {
 const rejectUpload = catchAsync(async (req, res) => {
   const fileId = req.body.fileId;
   const instituteName = req.body.instituteName;
-  await adminService.rejectUpload(fileId, instituteName);
+  await adminService.rejectUpload(fileId);
   res.status(httpStatus.OK).send("Rejected upload");
 });
 
