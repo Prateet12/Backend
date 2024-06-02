@@ -11,8 +11,8 @@ router.get('/allInstitutions', adminController.getAllInstitutions);
 router.post('/create', validate(adminValidation.createAdmin), adminController.createAdmin);
 router.post('/createInstituteAdmin', validate(adminValidation.createInstitutionAdmin),adminController.createInstituteAdmin);
 
-router.post('/registrationRequests', adminController.getRegistrationRequests);
-router.get('/uploadRequests', adminController.getUploadRequests);
+router.get('/registrationRequests/:instituteName', adminController.getRegistrationRequests);
+router.get('/uploadRequests/:instituteName', adminController.getUploadRequests);
 
 router.post('/approveRegistration',  validate(adminValidation.approveRegistration),adminController.approveRegistration);
 router.post('/rejectRegistration', adminController.rejectRegistration); // TODO(team): Discuss 

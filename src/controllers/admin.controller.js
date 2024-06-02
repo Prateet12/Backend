@@ -4,7 +4,9 @@ const { authService, userService, adminService } = require("../services");
 
 const getRegistrationRequests = catchAsync(async (req, res) => {
   const institutionName =
-    req.body && req.body.institutionName ? req.body.institutionName : null;
+    req.params && req.params.institutionName
+      ? req.params.institutionName
+      : null;
   const registration_requests = await adminService.getRegistrationRequests(
     institutionName
   );
@@ -12,7 +14,11 @@ const getRegistrationRequests = catchAsync(async (req, res) => {
 });
 
 const getUploadRequests = catchAsync(async (req, res) => {
-  const upload_requests = await adminService.getUploadRequests();
+  const institutionName =
+    req.params && req.params.institutionName
+      ? req.params.institutionName
+      : null;
+  const upload_requests = await adminService.getUploadRequests(institutionName);
   res.status(httpStatus.OK).send(upload_requests);
 });
 
@@ -56,7 +62,6 @@ const updateRegistrationRequests = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send("Updated registration requests");
 });
 
-
 const getAllInstitutions = catchAsync(async (req, res) => {
   const institutions = await adminService.getAllInstitutions();
   res.status(httpStatus.OK).send(institutions);
@@ -72,5 +77,5 @@ module.exports = {
   updateRegistrationRequests,
   createAdmin,
   createInstituteAdmin,
-  getAllInstitutions
+  getAllInstitutions,
 };
