@@ -33,7 +33,7 @@ const validateFileMetadata = async (metadata) => {
   }
 };
 
-const createNewFileData = (updatedMetadata, files) => {
+const createNewFileData = (updatedMetadata, files, isAdmin) => {
   const newFileData = {
     fromUser: updatedMetadata.fromUser,
     fileType: updatedMetadata.fileType,
@@ -58,29 +58,69 @@ const createNewFileData = (updatedMetadata, files) => {
     newFileData.synopsisFileSize = files[1].size;
     newFileData.synopsisFileName = files[1].filePath;
   }
+
+  if (isAdmin) {
+    // TODO(team): check this logic
+    newFileData.adminApproval = true;
+    newFileData.institutionalAdminApproval = true;
+    newFileData.status = "Approved";
+  }
+
   console.log("newFileData", newFileData);
 
   return newFileData;
 };
 
-// TODO(aadijain): add logic in admin, to get all files and approve them
-// or dissaprove them
-const createFileAndUpdateAdmin = async (fileData, admin, instituteAdmin) => {
+const createFileAndUpdateAdmin = async (
+  fileData,
+  admin,
+  instituteAdmin,
+  isAdmin
+) => {
   try {
-  const newFile = await File.create(fileData);
-  console.log("newFile", newFile);
+    const newFile = await File.create(fileData);
+    console.log("newFile", newFile);
 
-  admin.file_requests.push(newFile._id);
-  await admin.save();
+    if (!isAdmin) {
+      admin.file_requests.push(newFile._id);
+      await admin.save();
 
-  instituteAdmin.file_requests.push(newFile._id);
-  await instituteAdmin.save();
+      instituteAdmin.file_requests.push(newFile._id);
+      await instituteAdmin.save();
+    }
 
-  return newFile;
+    return newFile;
   } catch (error) {
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       "Error creating or saving file record: " + error.message
+    );
+  }
+};
+const getUserAndAdminStatus = async (metadata, admin, instituteAdmin) => {
+  // TODO(team): check this logic - if needed
+  let userIsAdmin = false;
+  let user = null;
+  if (metadata.fromUser === admin._id.toString()) {
+    userIsAdmin = true;
+    user = admin;
+  } else if (
+    instituteAdmin &&
+    metadata.fromUser === instituteAdmin._id.toString()
+  ) {
+    userIsAdmin = true;
+    user = instituteAdmin;
+  } else {
+    user = await userService.getUserById(metadata.fromUser);
+  }
+  return { user, userIsAdmin };
+};
+
+const validateAdmins = (userIsAdmin, admin, instituteAdmin) => {
+  if (!userIsAdmin && (!admin || !instituteAdmin)) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "Not enough admins to approve request"
     );
   }
 };
@@ -89,30 +129,34 @@ const uploadFile = async (req) => {
   const metadata = req.body;
   await validateFileMetadata(metadata);
 
-  const user = await userService.getUserById(metadata.fromUser);
-  if (!user) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "User not found");
-  }
-  console.log("user", user);
-  const admin = await Admin.getAdmin();
-  const instituteAdmin = await Admin.getInstituteAdmin(user.institution_name);
-  console.log("instituteAdmin", instituteAdmin);
-
-  if (!admin || !instituteAdmin) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      "Not enough admins to approve request"
-    );
-  }
-
   const files = req.files;
   if (!files) {
     throw new ApiError(httpStatus.BAD_REQUEST, "No file uploaded");
   }
 
+  const admin = await Admin.getAdmin();
+  const instituteAdmin = await Admin.getInstituteAdmin(req.institution);
+
+  const { user, userIsAdmin } = await getUserAndAdminStatus(
+    metadata,
+    admin,
+    instituteAdmin
+  );
+
+  if (!user) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "User not found");
+  }
+
+  validateAdmins(userIsAdmin, admin, instituteAdmin);
+
   try {
-    const fileData = createNewFileData(metadata, files);
-    return await createFileAndUpdateAdmin(fileData, admin, instituteAdmin);
+    const fileData = createNewFileData(metadata, files, userIsAdmin);
+    return await createFileAndUpdateAdmin(
+      fileData,
+      admin,
+      instituteAdmin,
+      userIsAdmin
+    );
   } catch (error) {
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
