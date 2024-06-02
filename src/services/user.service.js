@@ -38,7 +38,7 @@ const createUser = async (userBody) => {
 const getUsers = async () => {
   console.log("Hi from user service getUsers");
   // TODO(aadijain): paginate and query commands add here
-  const users = await User.find();
+  const users = await User.find({ verified: true });
   return users;
 };
 
