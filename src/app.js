@@ -16,8 +16,7 @@ const routes = require('./routes/v1');
 const app = express();
 
 // Serve static files from the "public" directory
-const staticDirectory = path.join('/Users/aadijain/Desktop/multerTest');
-app.use('/static', express.static(staticDirectory));
+app.use('/static', express.static(path.join(__dirname,'public')));
 
 // set security HTTP headers
 app.use(helmet());
