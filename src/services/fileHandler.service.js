@@ -135,7 +135,7 @@ const uploadFile = async (req) => {
   }
 
   const admin = await Admin.getAdmin();
-  const instituteAdmin = await Admin.getInstituteAdmin(req.institution);
+  const instituteAdmin = await Admin.getInstituteAdmin(metadata.institution);
 
   const { user, userIsAdmin } = await getUserAndAdminStatus(
     metadata,
