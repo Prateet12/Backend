@@ -1,0 +1,181 @@
+[{
+  "_id": {
+    "$oid": "665468f330e6c016a4f4ce72"
+  },
+  "role": "admin",
+  "permissions": [
+    "approval",
+    "uploadResume",
+    "uploadThesis",
+    "readThesis",
+    "readUsers"
+  ],
+  "navPermissions": [
+    {
+      "route": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "route": "/graduate-repo",
+      "title": "Graduate Repository"
+    },
+    {
+      "route": "/academic-repo",
+      "title": "Academic Repository"
+    },
+    {
+      "route": "/approvals-inbox",
+      "title": "Users"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "665468f330e6c016a4f4ce73"
+  },
+  "role": "institution admin",
+  "permissions": [
+    "approval",
+    "uploadResume",
+    "uploadThesis",
+    "readThesis",
+    "readUsers"
+  ],
+  "navPermissions": [
+    {
+      "route": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "route": "/graduate-repo",
+      "title": "Graduate Repository"
+    },
+    {
+      "route": "/academic-repo",
+      "title": "Academic Repository"
+    },
+    {
+      "route": "/approvals-inbox",
+      "title": "Users"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "665468f330e6c016a4f4ce74"
+  },
+  "role": "graduate",
+  "permissions": [
+    "uploadResume",
+    "uploadThesis",
+    "readThesis",
+    "readUsers"
+  ],
+  "navPermissions": [
+    {
+      "route": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "route": "/graduate-repo",
+      "title": "Graduate Repository"
+    },
+    {
+      "route": "/academic-repo",
+      "title": "Academic Repository"
+    },
+    {
+      "route": "/inbox",
+      "title": "My Documents"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "665468f330e6c016a4f4ce75"
+  },
+  "role": "practitioner",
+  "permissions": [
+    "uploadResume",
+    "readThesis",
+    "readUsers"
+  ],
+  "navPermissions": [
+    {
+      "route": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "route": "/graduate-repo",
+      "title": "Graduate Repository"
+    },
+    {
+      "route": "/academic-repo",
+      "title": "Academic Repository"
+    },
+    {
+      "route": "/inbox",
+      "title": "My Documents"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "665468f330e6c016a4f4ce76"
+  },
+  "role": "researcher",
+  "permissions": [
+    "uploadResume",
+    "uploadThesis",
+    "readThesis",
+    "readUsers"
+  ],
+  "navPermissions": [
+    {
+      "route": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "route": "/graduate-repo",
+      "title": "Graduate Repository"
+    },
+    {
+      "route": "/academic-repo",
+      "title": "Academic Repository"
+    },
+    {
+      "route": "/inbox",
+      "title": "My Documents"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "665468f330e6c016a4f4ce77"
+  },
+  "role": "professor",
+  "permissions": [
+    "uploadResume",
+    "uploadThesis",
+    "readThesis",
+    "readUsers"
+  ],
+  "navPermissions": [
+    {
+      "route": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "route": "/graduate-repo",
+      "title": "Graduate Repository"
+    },
+    {
+      "route": "/academic-repo",
+      "title": "Academic Repository"
+    },
+    {
+      "route": "/inbox",
+      "title": "My Documents"
+    }
+  ]
+}]

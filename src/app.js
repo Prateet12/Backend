@@ -15,6 +15,10 @@ const routes = require('./routes/v1');
 // app
 const app = express();
 
+// Serve static files from the "public" directory
+const staticDirectory = path.join('/Users/aadijain/Desktop/multerTest');
+app.use('/static', express.static(staticDirectory));
+
 // set security HTTP headers
 app.use(helmet());
 
@@ -31,10 +35,6 @@ app.use(mongoSanitize());
 // enable cors
 app.use(cors());
 app.options('*', cors());
-
-// Serve static files from the "public" directory
-const staticDirectory = path.join('/Users/aadijain/Desktop/multerTest');
-app.use('/static', express.static(staticDirectory));
 
 // v1 api routes
 app.use('/v1', routes);
