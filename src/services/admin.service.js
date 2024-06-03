@@ -176,7 +176,7 @@ const createAdmin = async (adminData) => {
   } else {
     const admin = await new Admin(adminData);
     admin.verified = true;
-    const role = await Role.findOne({ _id: adminData.role });
+    const role = await Role.findOne({ role: adminData.role });
     console.log("role: ", role);
     if (!role) {
       throw new Error("Admin role not found");
