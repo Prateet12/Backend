@@ -1,0 +1,626 @@
+{
+	"info": {
+		"_postman_id": "9f661d82-8e7a-45c9-a8de-6583bf838e7f",
+		"name": "urban-eco-hub",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16327095",
+		"_collection_link": "https://urb-clinder.postman.co/workspace/Urb-Clinder-Workspace~8bcfcedc-11e0-4cee-8cb7-04970db42d52/collection/16327095-9f661d82-8e7a-45c9-a8de-6583bf838e7f?action=share&source=collection_link&creator=16327095"
+	},
+	"item": [
+		{
+			"name": "user/getAllUsers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"type": "file"
+						}
+					],
+					"options": {
+						"formdata": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/user/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"test3@gmail.com\",\n    \"password\": \"Password123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"name\": \"aadi\",\n        \"email\": \"aadi@gmail.com\",\n        \"password\": \"Password123\",\n        \"role\": \"664f733f3602628294777f0a\",\n        \"highest_degree_earned\": \"PhD\",\n        \"field_of_study\": \"air_pollution_science\",\n        \"resume\": \"\",\n        \"graduation_date\": \"1999\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/getUserById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/user/664d7ce4fd7eeb0cb28e08aa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"user",
+						"664d7ce4fd7eeb0cb28e08aa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserByEmailId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/user/664d7ce4fd7eeb0cb28e08aa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"user",
+						"664d7ce4fd7eeb0cb28e08aa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllRoles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/role/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"role",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"admin\",\n    \"email\": \"admin@test.com\",\n    \"password\": \"admin123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/admin/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"admin",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get admin login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"instituteA@test.com\",\n    \"password\": \"inst123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Institute Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"instituteAdmin\",\n    \"email\": \"instituteA@test.com\",\n    \"password\": \"inst123\",\n    \"institution\": \"instituteA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/admin/createInstituteAdmin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"admin",
+						"createInstituteAdmin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "approve registration",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\": \"6654a2b4267476cefb27724e\",\n    \"admin\": \"66548de7cb00e14256105961\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/admin/approveRegistration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"admin",
+						"approveRegistration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Get Registration Requests",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/admin/registrationRequests/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"admin",
+						"registrationRequests",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "File upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "fromUser",
+							"value": "6655b5289ccd84e526834f76",
+							"type": "text"
+						},
+						{
+							"key": "fileType",
+							"value": "Thesis and Synopsis",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Test",
+							"type": "text"
+						},
+						{
+							"key": "author",
+							"value": "aadi",
+							"type": "text"
+						},
+						{
+							"key": "supervisors",
+							"value": "[\"sid\"]",
+							"type": "text"
+						},
+						{
+							"key": "abstract",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "files",
+							"type": "file",
+							"src": [
+								"/Users/aadijain/Desktop/multer.txt",
+								"/Users/aadijain/Desktop/multer1.txt"
+							]
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/file/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"file",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all files in db",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/file/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"file",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getFileById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/file/665c475c2e1e7b242e51ec9a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"file",
+						"665c475c2e1e7b242e51ec9a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserFiles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/file/userFiles/6659a9225660b82c126d11eb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"file",
+						"userFiles",
+						"6659a9225660b82c126d11eb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteFiles",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/file/delete/66575f0619b75fa53bf6771d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"file",
+						"delete",
+						"66575f0619b75fa53bf6771d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count files",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/file/fileCount",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"file",
+						"fileCount"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update File",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "fromUser",
+							"value": "6655b5289ccd84e526834f76",
+							"type": "text"
+						},
+						{
+							"key": "fileType",
+							"value": "Thesis and Synopsis",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Changing file name",
+							"type": "text"
+						},
+						{
+							"key": "author",
+							"value": "aadi",
+							"type": "text"
+						},
+						{
+							"key": "supervisors",
+							"value": "[\"sid\"]",
+							"type": "text"
+						},
+						{
+							"key": "abstract",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "files",
+							"type": "file",
+							"src": [
+								"/Users/aadijain/Desktop/multer.txt",
+								"/Users/aadijain/Desktop/multer1.txt"
+							]
+						},
+						{
+							"key": "fileId",
+							"value": "6658061760d7a7b87e8d8375",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/file/updateFile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"file",
+						"updateFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Institutions",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Approve file upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fileId\": \"66584eae89186424b736aa34\",\n    \"instituteName\": \"inst\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/v1/admin/approveUpload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"admin",
+						"approveUpload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "allInstitutions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/v1/admin/allInstitutions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v1",
+						"admin",
+						"allInstitutions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
