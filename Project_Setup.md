@@ -58,7 +58,7 @@
 
 - **Path:** Server -> src -> public
 - **Method:**
-  - Ensure an empty public directory is initialized every time.
+  - Ensure an empty public directory is initialized for the project setup.
   - Store the files in this public directory.
 
 ---
