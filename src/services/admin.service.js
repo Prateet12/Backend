@@ -136,6 +136,7 @@ const rejectRegistration = async (userId, adminId) => {
       await instituteAdmin.save();
     }
     user.verified = false;
+    user.status = "Rejected";
     admin.registration_requests = admin.registration_requests.filter(
       (id) => String(id) !== userId
     );
