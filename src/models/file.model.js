@@ -54,14 +54,14 @@ const fileSchema = new mongoose.Schema(
       required: true,
     },
     supervisors: {
-      type: [String],
+      type: String,
     },
     abstract: {
       type: String,
       required: true,
     },
     // TODO(aadijain newly added fields)
-    degree_program: {
+    degreeProgram: {
       type: String,
       required: true,
     },
@@ -69,7 +69,7 @@ const fileSchema = new mongoose.Schema(
       type: Date,
     },
     keywords: {
-      type: [String],
+      type: String,
     },
     institution: {
       type: String,
@@ -77,7 +77,7 @@ const fileSchema = new mongoose.Schema(
     department: {
       type: String,
     },
-    funding_sources: {
+    fundingSources: {
       type: String,
     },
     acknowledgements: {

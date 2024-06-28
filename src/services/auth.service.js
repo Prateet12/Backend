@@ -3,7 +3,7 @@ const tokenService = require("./token.service");
 const userService = require("./user.service");
 const adminService = require("./admin.service");
 const ApiError = require("../utils/ApiError");
-const { User } = require("../models");
+const { User,Token } = require("../models");
 
 /**
  * Login with username and password
@@ -66,7 +66,32 @@ const refreshAuth = async (refreshToken) => {
   }
 };
 
+
+/**
+ * Reset password
+ * @param {string} resetPasswordToken
+ * @param {string} newPassword
+ * @returns {Promise}
+ */
+const resetPassword = async (resetPasswordToken, newPassword) => {
+  try {
+    const resetPasswordTokenDoc = await tokenService.verifyToken(resetPasswordToken, 'resetPassword');
+    const user = await userService.getUserById(resetPasswordTokenDoc.user);
+    if (!user) {
+      throw new Error();
+    }
+    //console.log(user);
+    await Token.deleteMany({ user: user.id, type: 'resetPassword' });
+    await userService.updateUserById(user.id, { password: newPassword });
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+  
+};
+
 module.exports = {
   loginUserWithEmailAndPassword,
   refreshAuth,
+  resetPassword
 };

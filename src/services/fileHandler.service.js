@@ -5,16 +5,20 @@ const userService = require("./user.service");
 
 const fs = require("fs");
 const util = require("util");
+const { log } = require("console");
 const unlink = util.promisify(fs.unlink);
 
 const validateFileMetadata = async (metadata) => {
+
+  console.log("metadata", metadata);
+
   if (
     !metadata.fromUser ||
     !metadata.fileType ||
     !metadata.title ||
     !metadata.author ||
     !metadata.abstract ||
-    !metadata.degree_program
+    !metadata.degreeProgram
   ) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Missing required fields");
   }
@@ -37,18 +41,18 @@ const createNewFileData = (updatedMetadata, files, isAdmin) => {
   const newFileData = {
     fromUser: updatedMetadata.fromUser,
     fileType: updatedMetadata.fileType,
-    fileSize: files[0].size,
-    filePath: files[0].path,
-    filename: files[0].filename,
+    fileSize: files[0]? files[0].size : 0,
+    filePath: files[0]? files[0].path : "",
+    filename: files[0]? files[0].filename: updatedMetadata.filename,
     title: updatedMetadata.title,
     author: updatedMetadata.author,
     abstract: updatedMetadata.abstract,
-    degree_program: updatedMetadata.degree_program,
+    degreeProgram: updatedMetadata.degreeProgram,
     publication_date: updatedMetadata?.publication_date,
     keywords: updatedMetadata?.keywords,
     institution: updatedMetadata?.institution,
     department: updatedMetadata?.department,
-    funding_sources: updatedMetadata?.funding_sources,
+    fundingSources: updatedMetadata?.fundingSources,
     acknowledgements: updatedMetadata?.acknowledgements,
     supervisors: updatedMetadata?.supervisors,
   };
@@ -221,42 +225,48 @@ const getUserFiles = async (userId) => {
 // TODO(aadijain): Update file ruins the point of a RAG + Logic to replace file locally
 const updateFile = async (req) => {
   const updatedMetadata = req.body;
+  let id = req.query.id;
+  updatedMetadata._id = id;
+
+  console.log("updatedMetadata", updatedMetadata);
+
   const files = req.files;
   await validateFileMetadata(updatedMetadata);
-  if (!updatedMetadata.fileId) {
+  if (!updatedMetadata._id) {
     throw new ApiError(httpStatus.BAD_REQUEST, "No file id provided");
   }
 
-  if (!files || files.length === 0) {
+
+  if ((!files || files.length === 0) && updatedMetadata.fileType == ""  ) {
     throw new ApiError(httpStatus.BAD_REQUEST, "No file uploaded");
   }
 
-  const file = await File.findById(updatedMetadata.fileId);
+  const file = await File.findById(updatedMetadata._id);
   if (!file) {
     throw new ApiError(httpStatus.NOT_FOUND, "File not found");
   }
 
-  await unlink(file.filePath).catch((err) => {
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      `Error deleting file: ${err}`
-    );
-  });
+  // await unlink(file.filePath).catch((err) => {
+  //   throw new ApiError(
+  //     httpStatus.INTERNAL_SERVER_ERROR,
+  //     `Error deleting file: ${err}`
+  //   );
+  // });
 
-  if (files.length > 1) {
-    await unlink(file.synopsisFilePath).catch((err) => {
-      throw new ApiError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        `Error deleting second file: ${err}`
-      );
-    });
-  }
+  // if (files.length > 1) {
+  //   await unlink(file.synopsisFilePath).catch((err) => {
+  //     throw new ApiError(
+  //       httpStatus.INTERNAL_SERVER_ERROR,
+  //       `Error deleting second file: ${err}`
+  //     );
+  //   });
+  // }
 
   const newFileData = createNewFileData(updatedMetadata, files);
 
   // Need to locally also update data
   const updatedFile = await File.findByIdAndUpdate(
-    updatedMetadata.fileId,
+    updatedMetadata._id,
     newFileData,
     {
       new: true,

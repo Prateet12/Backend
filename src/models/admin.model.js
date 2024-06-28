@@ -50,6 +50,10 @@ const adminSchema = mongoose.Schema(
       trim: true,
       lowercase: true, // This will automatically convert the institution to lowercase
     },
+    tell_me_about_yourself:{
+      type:String,
+      trim:true
+    },
     verified: {
       type: Boolean,
       default: false,

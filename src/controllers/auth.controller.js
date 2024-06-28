@@ -6,6 +6,7 @@ const {
   tokenService,
   adminService,
   roleService,
+  emailService,
 } = require("../services");
 const ApiError = require("../utils/ApiError");
 
@@ -51,10 +52,34 @@ const register = catchAsync(async (req, res) => {
   }
 });
 
+
+const forgotPassword = catchAsync(async (req, res) => {
+  const resetPasswordToken = await tokenService.generateResetPasswordToken(
+    req.body.email
+  );
+  const user = await userService.getUserByEmailId(req.body.email);
+  //console.log(user);
+  // if(user.role == 'user'){ // student cant reset password
+  //   throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not a valid user!');
+  // }
+  await emailService.sendResetPasswordEmail(user, resetPasswordToken);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 const refreshTokens = catchAsync(async (req, res) => {
   const tokens = await authService.refreshAuth(req.body.refreshToken);
   res.send({ ...tokens });
 });
+
+const resetPassword = catchAsync(async (req, res) => {
+
+
+console.log(req.body);
+
+  await authService.resetPassword(req.body.token, req.body.password);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 
 const logout = catchAsync(async (req, res) => {});
 
@@ -62,4 +87,6 @@ module.exports = {
   login,
   register,
   refreshTokens,
+  forgotPassword,
+  resetPassword
 };

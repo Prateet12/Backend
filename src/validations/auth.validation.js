@@ -55,6 +55,19 @@ const refreshTokens = {
   }),
 };
 
+const forgotPassword = {
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+  }),
+};
+const resetPassword = {
+
+  body: Joi.object().keys({
+    password: Joi.string().required().custom(password),
+    token: Joi.string().required(),
+  }),
+};
+
 const register = Joi.object({
   role: Joi.string().required(),  // TODO(team): make this fetched from db
   userDetails: Joi.object({
@@ -69,4 +82,6 @@ module.exports = {
   login,
   refreshTokens,
   register,
+  forgotPassword,
+  resetPassword
 };

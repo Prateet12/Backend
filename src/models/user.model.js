@@ -29,6 +29,10 @@ const userSchema = mongoose.Schema(
       trim: true,
       private: true, // used by the toJSON plugin
     },
+    tell_me_about_yourself:{
+      type:String,
+      trim:true
+    },
     verified: {
       type: Boolean,
       default: false,

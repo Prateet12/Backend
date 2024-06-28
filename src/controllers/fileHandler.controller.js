@@ -45,6 +45,9 @@ const getUserFiles = catchAsync(async (req, res) => {
 
 const updateFile = catchAsync(async (req, res) => {
   const file = await fileHandlerService.updateFile(req);
+
+  console.log("file", file);
+
   if (!file) {
     throw new ApiError(httpStatus.NOT_FOUND, "File does not exist");
   }

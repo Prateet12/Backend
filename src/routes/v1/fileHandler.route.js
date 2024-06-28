@@ -6,6 +6,7 @@ const fileController = require("../../controllers/fileHandler.controller");
 const router = express.Router();
 
 router.post("/upload", upload.array("files", 2), fileController.uploadFile);
+router.patch("/upload", upload.array("files", 2), fileController.updateFile);
 router.delete("/delete/:id", fileController.deleteFile);
 router.get("/userFiles/:id", fileController.getUserFiles);
 router.get("/fileCount", fileController.getFileCount);

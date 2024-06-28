@@ -8,7 +8,9 @@ const storage = multer.diskStorage({
     cb(null,destination);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    //cb(null, file.originalname);
+    //Make unique file name
+    cb(null, Date.now() + '-' + file.originalname);
   },
 });
 const upload = multer({ storage: storage });
