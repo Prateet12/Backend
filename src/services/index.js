@@ -5,3 +5,4 @@ module.exports.tokenService = require('./token.service');
 module.exports.fileHandlerService = require('./fileHandler.service');
 module.exports.adminService = require('./admin.service');
 module.exports.emailService = require('./email.service');
+module.exports.statsService = require('./stats.service');
